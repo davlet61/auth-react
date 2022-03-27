@@ -7,8 +7,16 @@ import {
   Box,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { useRef } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const Signup = () => {
+  const emailRef = useRef();
+  const passRef = useRef();
+  const passConfirmRef = useRef();
+
+  const { signup } = useAuth();
+
   const form = useForm({
     initialValues: {
       email: '',
@@ -24,6 +32,11 @@ const Signup = () => {
     },
   });
 
+  const handleSubmit = e => {
+    e.preventDefault();
+    signup(emailRef.current.value, passRef.current.value);
+  };
+
   return (
     <Box sx={{ maxWidth: 300 }} mx="auto">
       <form onSubmit={form.onSubmit(values => console.log(values))}>
@@ -31,11 +44,13 @@ const Signup = () => {
           required
           label="Email"
           placeholder="your@email.com"
+          ref={emailRef}
           {...form.getInputProps('email')}
         />
         <PasswordInput
           label="Password"
           placeholder="Password"
+          ref={passRef}
           {...form.getInputProps('password')}
         />
 
@@ -43,6 +58,7 @@ const Signup = () => {
           mt="sm"
           label="Confirm password"
           placeholder="Confirm password"
+          ref={passConfirmRef}
           {...form.getInputProps('confirmPassword')}
         />
 
