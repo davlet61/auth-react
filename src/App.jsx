@@ -1,10 +1,10 @@
 import './App.css';
-import Demo from './components/Form';
+import Signup from './components/Form';
 
 function App() {
   return (
     <>
-      <Demo />
+      <Signup />
     </>
   );
 }

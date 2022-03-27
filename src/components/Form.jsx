@@ -1,15 +1,26 @@
-import { TextInput, Checkbox, Button, Group, Box } from '@mantine/core';
+import {
+  PasswordInput,
+  TextInput,
+  Checkbox,
+  Button,
+  Group,
+  Box,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
 
-const Demo = () => {
+const Signup = () => {
   const form = useForm({
     initialValues: {
       email: '',
+      password: 'secret',
+      confirmPassword: 'sevret',
       termsOfService: false,
     },
 
     validate: {
       email: value => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+      confirmPassword: (value, values) =>
+        value !== values.password ? 'Passwords did not match' : null,
     },
   });
 
@@ -22,6 +33,18 @@ const Demo = () => {
           placeholder="your@email.com"
           {...form.getInputProps('email')}
         />
+        <PasswordInput
+          label="Password"
+          placeholder="Password"
+          {...form.getInputProps('password')}
+        />
+
+        <PasswordInput
+          mt="sm"
+          label="Confirm password"
+          placeholder="Confirm password"
+          {...form.getInputProps('confirmPassword')}
+        />
 
         <Checkbox
           mt="md"
@@ -30,11 +53,11 @@ const Demo = () => {
         />
 
         <Group position="right" mt="md">
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Sign Up</Button>
         </Group>
       </form>
     </Box>
   );
 };
 
-export default Demo;
+export default Signup;
