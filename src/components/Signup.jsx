@@ -7,13 +7,17 @@ import {
   Box,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Signup = () => {
   const emailRef = useRef();
   const passRef = useRef();
   const passConfirmRef = useRef();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
 
   const { signup } = useAuth();
 
@@ -32,14 +36,22 @@ const Signup = () => {
     },
   });
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    signup(emailRef.current.value, passRef.current.value);
+  let error;
+
+  const handleSubmit = async e => {
+    try {
+      setLoading(true);
+      await signup(emailRef.current.value, passRef.current.value);
+      navigate('/');
+    } catch (err) {
+      return (error = 'Failed to create an account');
+    }
+    setLoading(false);
   };
 
   return (
     <Box sx={{ maxWidth: 300 }} mx="auto">
-      <form onSubmit={form.onSubmit(values => console.log(values))}>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
           required
           label="Email"
@@ -69,7 +81,9 @@ const Signup = () => {
         />
 
         <Group position="right" mt="md">
-          <Button type="submit">Sign Up</Button>
+          <Button disabled={loading} type="submit">
+            Sign Up
+          </Button>
         </Group>
       </form>
     </Box>
